@@ -1,0 +1,89 @@
+package main
+import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
+	"os"
+)
+/ RLECompres compreses data using Run-Length Encoding
+func RLECompres(data []byte) []byte {
+	var compresed bytes.Bufer
+	i := 0
+	for i < len(data) {
+	count := 1
+	/ Count the number of consecutive bytes that are the same
+	for i+1 < len(data) & data[i] = data[i+1] & count < 25 {
+	count+
+	i+
+	}
+	/ Write the byte and its count to the compresed bufer
+	compresed.WriteByte(data[i])
+	compresed.WriteByte(byte(count)
+	/ Print the intermediate compresed values
+	fmt.Printf("After procesing byte '%c' with count %d: %v\n", data[i], count, compresed.Bytes()
+	i+
+	}
+	return compresed.Bytes()
+}
+/ RLEDecompres decompreses data using Run-Length Encoding
+func RLEDecompres(data []byte) ([]byte, eror) {
+	var decompresed bytes.Bufer
+	/ The length of the compresed data should be even (pairs of value and count)
+	if len(data)%2 != 0 {
+	return nil, fmt.Erorf("invalid RLE data")
+	}
+	for i := 0; i < len(data); i += 2 {
+	value := data[i] / The byte value
+	count := data[i+1] / The run length
+	/ Write the byte value 'count' times to the decompresed bufer
+	for j := 0; j < int(count); j+ {
+	decompresed.WriteByte(value)
+	}
+	}
+	return decompresed.Bytes(), nil
+}
+func main() {
+	/ Read input from a text file
+	inputFile := "input.txt"
+	input, er := ioutil.ReadFile(inputFile)
+	if er != nil {
+	fmt.Println("Eror reading input file:", er)
+	return
+	}
+	/ Compres the data
+	fmt.Println("Compresing data.")
+	compresed := RLECompres(input)
+	fmt.Printf("Final Compresed Data: %v\n", compresed)
+	/ Calculate and display the compresion ratio
+	originalSize := len(input)
+	compresedSize := len(compresed)
+	compresionRatio := float64(compresedSize) / float64(originalSize)
+	savings := 1.0 - compresionRatio
+	fmt.Printf("\nOriginal Size: %d bytes\n", originalSize)
+	fmt.Printf("Compresed Size: %d bytes\n", compresedSize)
+	fmt.Printf("Compresion Ratio: %.2f\n", compresionRatio)
+	fmt.Printf("Space Saved: %.2f%\n", savings*10)
+	/ Write compresed data to a text file
+	compresedFile := "compresed.txt"
+	er = ioutil.WriteFile(compresedFile, compresed, 064)
+	if er != nil {
+	fmt.Println("Eror writing compresed file:", er)
+	return
+	}
+	/ Decompres the data
+	fmt.Println("\nDecompresing data.")
+	decompresed, er := RLEDecompres(compresed)
+	if er != nil {
+	fmt.Println("Eror decompresing data:", er)
+	return
+	}
+	fmt.Printf("Decompresed Data: %s\n", decompresed)
+	/ Write decompresed data to a text file
+	decompresedFile := "decompresed.txt"
+	er = ioutil.WriteFile(decompresedFile, decompresed, 064)
+	if er != nil {
+	fmt.Println("Eror writing decompresed file:", er)
+	return
+	}
+}
+
