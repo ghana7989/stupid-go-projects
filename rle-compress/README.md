@@ -27,3 +27,7 @@ This project implements a simple Run-Length Encoding (RLE) compression and decom
     - `compressed.txt`: Contains the compressed data.
     - `decompressed.txt`: Contains the decompressed data, which should match the original input.
 
+
+
+https://github.com/user-attachments/assets/8163a4d2-5c5f-49c4-bcff-a2a772aee5bd
+
